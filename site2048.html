@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2048 Game with Ads (Mobile Friendly)</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #faf8ef;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    header {
+        text-align: center;
+        margin: 10px;
+    }
+    .ad-container {
+        margin: 10px 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    #game-container {
+        background: #bbada0;
+        border-radius: 10px;
+        padding: 15px;
+        display: inline-block;
+        touch-action: none; /* Prevents page scrolling on swipe */
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 80px);
+        grid-gap: 10px;
+    }
+    .tile {
+        width: 80px;
+        height: 80px;
+        background: #cdc1b4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #776e65;
+        border-radius: 5px;
+        transition: background 0.2s;
+    }
+    .score {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    button {
+        background: #8f7a66;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #7f6a56;
+    }
+</style>
+<!-- AdSense script -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>2048 Game</h1>
+    <div class="score">Score: <span id="score">0</span></div>
+    <button onclick="startGame()">Restart</button>
+</header>
+
+<!-- Top Ad -->
+<div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1234567890"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+<!-- Game Area -->
+<div id="game-container">
+    <div class="grid" id="grid"></div>
+</div>
+
+<!-- Bottom Ad -->
+<div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1234567890"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+<script>
+let grid = [];
+let score = 0;
+const size = 4;
+let touchStartX = 0;
+let touchStartY = 0;
+
+function initGrid() {
+    grid = [];
+    for (let i = 0; i < size; i++) {
+        grid[i] = [];
+        for (let j = 0; j < size; j++) {
+            grid[i][j] = 0;
+        }
+    }
+}
+
+function addRandomTile() {
+    let empty = [];
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            if (grid[i][j] === 0) empty.push({x: i, y: j});
+        }
+    }
+    if (empty.length === 0) return;
+    let {x, y} = empty[Math.floor(Math.random() * empty.length)];
+    grid[x][y] = Math.random() < 0.9 ? 2 : 4;
+}
+
+function drawGrid() {
+    let gridElement = document.getElementById("grid");
+    gridElement.innerHTML = "";
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            let tile = document.createElement("div");
+            tile.className = "tile";
+            if (grid[i][j] !== 0) {
+                tile.textContent = grid[i][j];
+                tile.style.background = getTileColor(grid[i][j]);
+                tile.style.color = grid[i][j] > 4 ? "#f9f6f2" : "#776e65";
+            }
+            gridElement.appendChild(tile);
+        }
+    }
+    document.getElementById("score").textContent = score;
+}
+
+function getTileColor(value) {
+    const colors = {
+        2: "#eee4da",
+        4: "#ede0c8",
+        8: "#f2b179",
+        16: "#f59563",
+        32: "#f67c5f",
+        64: "#f65e3b",
+        128: "#edcf72",
+        256: "#edcc61",
+        512: "#edc850",
+        1024: "#edc53f",
+        2048: "#edc22e"
+    };
+    return colors[value] || "#3c3a32";
+}
+
+function slide(row) {
+    row = row.filter(val => val);
+    for (let i = 0; i < row.length - 1; i++) {
+        if (row[i] === row[i + 1]) {
+            row[i] *= 2;
+            score += row[i];
+            row[i + 1] = 0;
+        }
+    }
+    row = row.filter(val => val);
+    while (row.length < size) {
+        row.push(0);
+    }
+    return row;
+}
+
+function moveLeft() {
+    for (let i = 0; i < size; i++) {
+        let row = grid[i];
+        row = slide(row);
+        grid[i] = row;
+    }
+}
+
+function moveRight() {
+    for (let i = 0; i < size; i++) {
+        let row = grid[i];
+        row.reverse();
+        row = slide(row);
+        row.reverse();
+        grid[i] = row;
+    }
+}
+
+function moveUp() {
+    for (let j = 0; j < size; j++) {
+        let col = [];
+        for (let i = 0; i < size; i++) {
+            col.push(grid[i][j]);
+        }
+        col = slide(col);
+        for (let i = 0; i < size; i++) {
+            grid[i][j] = col[i];
+        }
+    }
+}
+
+function moveDown() {
+    for (let j = 0; j < size; j++) {
+        let col = [];
+        for (let i = 0; i < size; i++) {
+            col.push(grid[i][j]);
+        }
+        col.reverse();
+        col = slide(col);
+        col.reverse();
+        for (let i = 0; i < size; i++) {
+            grid[i][j] = col[i];
+        }
+    }
+}
+
+function startGame() {
+    score = 0;
+    initGrid();
+    addRandomTile();
+    addRandomTile();
+    drawGrid();
+}
+
+function handleKey(e) {
+    let oldGrid = JSON.stringify(grid);
+    if (e.key === "ArrowLeft") moveLeft();
+    else if (e.key === "ArrowRight") moveRight();
+    else if (e.key === "ArrowUp") moveUp();
+    else if (e.key === "ArrowDown") moveDown();
+    if (JSON.stringify(grid) !== oldGrid) {
+        addRandomTile();
+    }
+    drawGrid();
+}
+
+// Swipe controls
+document.getElementById("game-container").addEventListener("touchstart", e => {
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+});
+
+document.getElementById("game-container").addEventListener("touchend", e => {
+    const touch = e.changedTouches[0];
+    let dx = touch.clientX - touchStartX;
+    let dy = touch.clientY - touchStartY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) moveRight();
+        else if (dx < -30) moveLeft();
+    } else {
+        if (dy > 30) moveDown();
+        else if (dy < -30) moveUp();
+    }
+
+    addRandomTile();
+    drawGrid();
+});
+
+document.addEventListener("keydown", handleKey);
+startGame();
+</script>
+
+</body>
+</html>
