@@ -24,26 +24,31 @@
     }
     .icon-container {
         display: flex;
-        gap: 40px;
+        gap: 30px;
         margin-top: 60px;
         flex-wrap: wrap;
         justify-content: center;
+        padding: 20px;
     }
     .game-icon {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
         background-color: #2a2a40;
         border-radius: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 2rem;
+        font-size: 2.5rem;
         color: #ffb400;
         cursor: pointer;
         transition: transform 0.2s, background-color 0.3s;
+        transform: skew(-15deg);
+    }
+    .game-icon span {
+        transform: skew(15deg); /* counter-skew to make emoji upright */
     }
     .game-icon:hover {
-        transform: scale(1.1);
+        transform: skew(-15deg) scale(1.1);
         background-color: #ffb400;
         color: #1e1e2f;
     }
@@ -52,9 +57,16 @@
 <body>
     <header>MoGames</header>
     <div class="icon-container">
-        <div class="game-icon" title="Game 1">🎮</div>
-        <div class="game-icon" title="Game 2">🕹️</div>
-        <div class="game-icon" title="Game 3">⚡</div>
+        <div class="game-icon" title="Game 1"><span>🎮</span></div>
+        <div class="game-icon" title="Game 2"><span>🕹️</span></div>
+        <div class="game-icon" title="Game 3"><span>⚡</span></div>
+        <div class="game-icon" title="Game 4"><span>🚀</span></div>
+        <div class="game-icon" title="Game 5"><span>🎯</span></div>
+        <div class="game-icon" title="Game 6"><span>🧩</span></div>
+        <div class="game-icon" title="Game 7"><span>🏎️</span></div>
+        <div class="game-icon" title="Game 8"><span>🏹</span></div>
+        <div class="game-icon" title="Game 9"><span>🪂</span></div>
+        <div class="game-icon" title="Game 10"><span>🗡️</span></div>
     </div>
 </body>
 </html>
