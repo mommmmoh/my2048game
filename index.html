@@ -17,10 +17,11 @@
     }
     header {
         margin-top: 40px;
-        font-size: 3rem;
-        font-weight: bold;
-        color: #ffb400;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    }
+    header img {
+        max-width: 300px;
+        height: auto;
+        display: block;
     }
     .icon-container {
         display: flex;
@@ -55,7 +56,9 @@
 </style>
 </head>
 <body>
-    <header>MoGames</header>
+    <header>
+        <img src="logo.png" alt="MoGames Logo">
+    </header>
     <div class="icon-container">
         <div class="game-icon" title="Game 1"><span>🎮</span></div>
         <div class="game-icon" title="Game 2"><span>🕹️</span></div>
