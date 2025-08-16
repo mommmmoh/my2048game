@@ -58,6 +58,16 @@
         background-color: #ffb400;
         color: #1e1e2f;
     }
+    /* remove underline from links inside icons */
+    .game-icon a {
+        color: inherit;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
 </style>
 </head>
 <body>
@@ -65,7 +75,12 @@
         <img src="logo.png" alt="MoGames Logo">
     </header>
     <div class="icon-container">
-        <div class="game-icon" title="Game 1"><span>🎮</span></div>
+        <!-- Game 1: linked to 2048 -->
+        <div class="game-icon" title="2048">
+            <a href="2048-master/index.html"><span>🎮</span></a>
+        </div>
+
+        <!-- Other placeholders -->
         <div class="game-icon" title="Game 2"><span>🕹️</span></div>
         <div class="game-icon" title="Game 3"><span>⚡</span></div>
         <div class="game-icon" title="Game 4"><span>🚀</span></div>
@@ -78,7 +93,4 @@
     </div>
 </body>
 </html>
-
-
-
 
